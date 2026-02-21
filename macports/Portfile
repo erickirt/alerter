@@ -1,10 +1,12 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           github 1.0
 
-name                alerter
-version             26.3
+github.setup        vjeantet alerter 26.5 v
+github.tarball_from archive
 revision            0
+
 categories          sysutils
 license             MIT
 maintainers         {github.com:vjeantet @vjeantet}
@@ -14,19 +16,23 @@ long_description    Alerter is a macOS command-line tool that sends native \
                     clicks, replies, actions, and timeouts. Output goes to \
                     stdout as plain text or JSON.
 
-homepage            https://github.com/vjeantet/alerter
 platforms           {darwin >= 22}
-supported_archs     arm64 x86_64
 
-master_sites        https://github.com/vjeantet/alerter/releases/download/v${version}/
-distfiles           alerter-${version}.zip
-checksums           sha256 49b199a57c8178e3f8c0e20a220af72c045d6eef5e825f181788c5757ea6861d
+checksums           rmd160  0be613141e1315b4a75d63282958bc66b31a3f77 \
+                    sha256  39155ff4743fc3454b65a4e29c15ee134bd53eee838d6289ae6d72f5894fb185 \
+                    size    551156
 
-extract.mkdir       yes
+compiler.cpath
+
 use_configure       no
+use_xcode           yes
 
-build {}
+build.cmd           swift
+build.target        build
+build.args          --configuration release --disable-sandbox
+
+set builtproductdir ${worksrcpath}/.build/release
 
 destroot {
-    xinstall -m 755 ${worksrcpath}/alerter ${destroot}${prefix}/bin/
+    xinstall -m 755 ${builtproductdir}/alerter ${destroot}${prefix}/bin/
 }
